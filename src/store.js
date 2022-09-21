@@ -3,6 +3,7 @@ import thunk from 'redux-thunk';
 import axios from 'axios';
 import logger from 'redux-logger';
 
+
 const tasks = (state = [], action)=> {
   if(action.type === 'SET_TASKS'){
     return action.tasks;
@@ -15,6 +16,9 @@ const tasks = (state = [], action)=> {
   }
   if(action.type === 'CREATE_TASK'){
     return [...state, action.task];
+  }
+  if(action.type === 'FILTER_TASK'){
+    return action.tasks;
   }
   return state;
 };
@@ -32,24 +36,35 @@ export const fetchTasks = ()=> {
   };
 };
 
-export const updateTask = (task)=> {
+export const updateTask = (task, navigate)=> {
   return async(dispatch)=> {
     const response = await axios.put(`/api/tasks/${task.id}`, task);
     dispatch({ type: 'UPDATE_TASK', task: response.data });
+    navigate('/')
   };
 };
 
-export const destroyTask = (task)=> {
+export const filterTasks = (task, navigate)=> {
+  return async(dispatch)=> {
+    const response = await axios.get(`/api/tasks/${task.difficulty}`);
+    dispatch({ type: 'FILTER_TASK', tasks: response.data });
+    navigate(`/tasks/${task.difficulty}`)
+  };
+};
+
+export const destroyTask = (task, navigate)=> {
   return async(dispatch)=> {
     await axios.delete(`/api/tasks/${task.id}`);
     dispatch({ type: 'DESTROY_TASK', task });
+    navigate('/')
   };
 };
 
-export const createTask = (task)=> {
+export const createTask = (task, navigate)=> {
   return async(dispatch)=> {
     const response = await axios.post('/api/tasks', task);
     dispatch({ type: 'CREATE_TASK', task: response.data });
+    navigate(`/tasks/${response.data.id}`)
   };
 };
 

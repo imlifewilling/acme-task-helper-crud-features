@@ -13,7 +13,7 @@ const App = ()=> {
   }, []);
   return (
     <div>
-      <h1><Link to='/'>Acme Tasks ({ tasks.length })</Link></h1>
+      <h1><Link to='/'><span onClick={() => {dispatch(fetchTasks())}}>Acme Tasks</span>({ tasks.length })</Link></h1>
       <Routes>
         <Route path='/' element={ <Tasks /> } />
         <Route path='/tasks/:id' element={ <Tasks /> } />

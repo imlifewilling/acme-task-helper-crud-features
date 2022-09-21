@@ -15,6 +15,20 @@ app.get('/api/tasks', async(req, res, next)=> {
   }
 });
 
+app.get('/api/tasks/:difficulty', async(req, res, next)=> {
+  console.log(req.params.difficulty)
+  try {
+    res.send(await Task.findAll(
+      {where: {
+        difficulty : req.params.difficulty
+      }}
+    ))
+  }
+  catch(ex){
+    next(ex);
+  }
+});
+
 app.post('/api/tasks', async(req, res, next)=> {
   try {
     res.status(201).send(await Task.create(req.body));
